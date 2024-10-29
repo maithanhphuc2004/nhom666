@@ -10,7 +10,7 @@ from openpyxl import Workbook
 import sqlite3  # Thêm thư viện SQLite
 
 # Đường dẫn đến file chromedriver.exe
-chrome_path = r'C:\Users\ACER\OneDrive\Documents\phuc\New folder\chromedriver.exe'
+chrome_path = r'D:/nhom666/DoAnNhom/chromedriver.exe'
 
 # Khởi tạo driver toàn cục
 options = Options()
@@ -129,6 +129,19 @@ def save_to_excel(products):
 
     wb.save("books.xlsx")
     print("Đã lưu dữ liệu vào file Excel.")
+
+def on_tree_select(event):
+    selected_item = tree.selection()
+    if selected_item:
+        item = tree.item(selected_item)
+        title = item['values'][1]
+        price = item['values'][2]
+        product_link = item['values'][3]  # Lấy link sản phẩm
+
+        title_label.config(text=title)
+        price_label.config(text=f"Giá: {price} VNĐ")
+        link_label.config(text=f"Link sản phẩm: {product_link}")  # Hiển thị link sản phẩm
+        link_label.bind("<Button-1>", lambda e: webbrowser.open(product_link))  # Liên kết sự kiện nhấp chuột
 
 # Kết nối và lưu dữ liệu vào SQLite
 def save_to_database(products):
