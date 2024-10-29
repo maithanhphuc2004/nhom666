@@ -114,3 +114,53 @@ def get_detailed_product_info(link):
         "so_trang": so_trang,
         "hinh_thuc": hinh_thuc
     }
+def save_to_excel(products):
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["Title", "Price", "Link", "Ma Hang", "Nha Cung Cap", "Nguoi Dich", "Tac Gia", "NXB", "Nam XB", "Ngon Ngu", "Trong Luong", "Kich Thuoc", "So Trang", "Hinh Thuc"])
+
+    for product in products:
+        ws.append([
+            product['title'], product['price'], product['link'], product.get('ma_hang', ''), product.get('nha_cung_cap', ''),
+            product.get('nguoi_dich', ''), product.get('tac_gia', ''), product.get('nxb', ''), product.get('nam_xb', ''),
+            product.get('ngon_ngu', ''), product.get('trong_luong', ''), product.get('kich_thuoc', ''),
+            product.get('so_trang', ''), product.get('hinh_thuc', '')
+        ])
+
+    wb.save("books.xlsx")
+    print("Đã lưu dữ liệu vào file Excel.")
+
+# Kết nối và lưu dữ liệu vào SQLite
+def save_to_database(products):
+    conn = sqlite3.connect('books.db')
+    cursor = conn.cursor()
+    cursor.execute('DROP TABLE IF EXISTS books')
+    cursor.execute('''CREATE TABLE books(
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        title TEXT,
+                        price INTEGER,
+                        link TEXT,
+                        ma_hang TEXT,
+                        nha_cung_cap TEXT,
+                        nguoi_dich TEXT,
+                                                gia TEXT,
+                        nxb TEXT,
+                        nam_xb TEXT,
+                        ngon_ngu TEXT,
+                        trong_luong TEXT,
+                        kich_thuoc TEXT,
+                        so_trang TEXT,
+                        hinh_thuc TEXT)''')
+    conn.commit()
+
+    for product in products:
+        cursor.execute('''INSERT INTO books (title, price, link, ma_hang, nha_cung_cap, nguoi_dich, tac_gia, nxb, nam_xb, ngon_ngu, trong_luong, kich_thuoc, so_trang, hinh_thuc) 
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                       (product['title'], product['price'], product['link'], product.get('ma_hang', ''), product.get('nha_cung_cap', ''),
+                        product.get('nguoi_dich', ''), product.get('tac_gia', ''), product.get('nxb', ''), product.get('nam_xb', ''),
+                        product.get('ngon_ngu', ''), product.get('trong_luong', ''), product.get('kich_thuoc', ''),
+                        product.get('so_trang', ''), product.get('hinh_thuc', '')))
+
+    conn.commit()
+    conn.close()
+    print("Đã lưu dữ liệu vào cơ sở dữ liệu SQLite.")
