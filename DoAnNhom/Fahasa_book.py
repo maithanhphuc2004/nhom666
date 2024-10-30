@@ -137,7 +137,7 @@ def scrape_main_page():
     time.sleep(5)
 
     # Dừng khi đạt 500 sản phẩm
-    while len(products) < 500:
+    while len(products) < 10:
         books = driver.find_elements(By.XPATH, "//div[contains(@class,'ma-box-content')]")
         if not books:
             print("Không tìm thấy sản phẩm nào trên trang hiện tại.")
@@ -145,7 +145,7 @@ def scrape_main_page():
 
         # Kiểm tra điều kiện này sau mỗi lần thêm sản phẩm
         for book in books:
-            if len(products) >= 500:
+            if len(products) >= 10:
                 break
             try:
                 link = book.find_element(By.TAG_NAME, 'h2').find_element(By.TAG_NAME, 'a').get_attribute('href')
@@ -168,7 +168,7 @@ def scrape_main_page():
                 continue
 
         # Kiểm tra nếu đủ sản phẩm rồi thì thoát vòng lặp
-        if len(products) >= 500:
+        if len(products) >= 10:
             break
 
         #Nhấn nút sang trang cho đến khi không còn
