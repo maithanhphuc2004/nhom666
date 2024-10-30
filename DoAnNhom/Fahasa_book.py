@@ -20,7 +20,7 @@ def create_driver():
     options.add_argument("--disable-infobars")
     options.add_argument("--disable-notifications")
     options.add_argument("--mute-audio")
-    #options.add_argument("--headless")  # Chạy trong chế độ không hiển thị
+    options.add_argument("--headless")  # Chạy trong chế độ không hiển thị
 
     options.add_experimental_option("prefs", {
         "profile.default_content_setting_values.notifications": 2
@@ -138,14 +138,14 @@ def scrape_main_page():
     time.sleep(5)
 
     # Dừng khi đạt 500 sản phẩm
-    while len(products) < 10:
+    while len(products) < 800:
         books = driver.find_elements(By.XPATH, "//div[contains(@class,'ma-box-content')]")
         if not books:
             print("Không tìm thấy sản phẩm nào trên trang hiện tại.")
             break
 
         for book in books:
-            if len(products) >= 10:
+            if len(products) >= 800:
                 break
             try:
                 # Lấy tiêu đề và liên kết sản phẩm
@@ -169,7 +169,7 @@ def scrape_main_page():
                 continue
 
         # Kiểm tra nếu đủ sản phẩm rồi thì thoát vòng lặp
-        if len(products) >= 10:
+        if len(products) >= 800:
             break
 
         # Nhấn nút sang trang cho đến khi không còn
