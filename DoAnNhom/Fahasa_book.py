@@ -11,7 +11,8 @@ from openpyxl import Workbook
 import sqlite3
 
 # Đường dẫn đến file chromedriver.exe
-chrome_path = r'C:\Users\ACER\OneDrive\Documents\phuc\New folder\chromedriver.exe'
+chrome_path = 'chromedriver.exe'
+
 
 # Khởi tạo driver cho mỗi luồng
 def create_driver():
@@ -143,26 +144,26 @@ def scrape_main_page():
             print("Không tìm thấy sản phẩm nào trên trang hiện tại.")
             break
 
-        # Kiểm tra điều kiện này sau mỗi lần thêm sản phẩm
         for book in books:
             if len(products) >= 10:
                 break
             try:
-                link = book.find_element(By.TAG_NAME, 'h2').find_element(By.TAG_NAME, 'a').get_attribute('href')
-                title = book.find_element(By.TAG_NAME, 'h2').text
-                price_text = book.find_element(By.CLASS_NAME, 'special-price').text
-                price = re.sub(r'[^\d]', '', price_text)
+                # Lấy tiêu đề và liên kết sản phẩm
+                title_element = book.find_element(By.CLASS_NAME, 'product-name-no-ellipsis')
+                title = title_element.text
+                link = title_element.find_element(By.TAG_NAME, 'a').get_attribute('href')
+
+                # Lấy giá sản phẩm
+                price_element = book.find_element(By.CLASS_NAME, 'special-price')
+                price = re.sub(r'[^\d]', '', price_element.text) if price_element else "Không có giá"
 
                 # Kiểm tra xem sản phẩm đã có trong danh sách hay chưa
-                if not any(p['link'] == link for p in products):  # Sử dụng hàm any() để kiểm tra
+                if not any(p['link'] == link for p in products):
                     products.append({"link": link, "title": title, "price": price})
                     print(f"Đã thêm sản phẩm: {title} - Giá: {price}")
-
-                # In ra lỗi nếu sản phẩm đã có trong danh sách
                 else:
                     print(f"Sản phẩm đã tồn tại: {title}")
 
-            # In ra lỗi khi không tìm thấy được link, title, price
             except Exception as e:
                 print(f"Lỗi lấy thông tin sản phẩm: {e}")
                 continue
@@ -171,7 +172,7 @@ def scrape_main_page():
         if len(products) >= 10:
             break
 
-        #Nhấn nút sang trang cho đến khi không còn
+        # Nhấn nút sang trang cho đến khi không còn
         try:
             next_button = driver.find_element(By.CLASS_NAME, "icon-turn-right")
             next_button.click()
@@ -180,10 +181,10 @@ def scrape_main_page():
             print(f"Lỗi điều hướng sang trang tiếp theo: {e}")
             break
 
-    #Tắt driver in ra số sản phẩm đã cào được
     driver.quit()
     print(f"Tổng số sản phẩm đã cào: {len(products)}")
     return products
+
 
 # Hàm chạy đa luồng để cào dữ liệu chi tiết của từng sản phẩm
 def scrape_product_details(products):
