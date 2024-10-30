@@ -247,10 +247,14 @@ def save_to_database(products):
 # Chạy các hàm để cào và lưu dữ liệu
 def main():
     products = scrape_main_page()  # Cào dữ liệu sản phẩm chính
-    if products:  # Kiểm tra xem có sản phẩm nào không
-        detailed_products = scrape_product_details(products)  # Cào dữ liệu chi tiết với đa luồng
-        save_to_excel(detailed_products)  # Lưu vào file Excel
-        save_to_database(detailed_products)  # Lưu vào cơ sở dữ liệu
+    # Kiểm tra xem có sản phẩm nào không
+    if products:
+        # Cào dữ liệu chi tiết với đa luồng
+        detailed_products = scrape_product_details(products)
+        # Lưu vào file Excel
+        save_to_excel(detailed_products)
+        # Lưu vào cơ sở dữ liệu
+        save_to_database(detailed_products)
         print("Hoàn thành việc cào dữ liệu!")
     else:
         print("Không có sản phẩm nào được cào.")
