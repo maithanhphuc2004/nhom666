@@ -235,7 +235,8 @@ def save_to_database(products):
     for product in products:
         cursor.execute('''INSERT INTO books (title, price, link, ma_hang, nha_cung_cap, nguoi_dich, tac_gia, nxb, nam_xb, ngon_ngu, trong_luong, kich_thuoc, so_trang, hinh_thuc) 
                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                       (product['title'], product['price'], product['link'], product.get('ma_hang', ''), product.get('nha_cung_cap', ''), product.get('nguoi_dich', ''), product.get('tac_gia', ''), product.get('nxb', ''),
+                       (product['title'], product['price'], product['link'], product.get('ma_hang', ''), product.get('nha_cung_cap', ''),
+                        product.get('nguoi_dich', ''), product.get('tac_gia', ''), product.get('nxb', ''),
                         product.get('nam_xb', ''), product.get('ngon_ngu', ''), product.get('trong_luong', ''),
                         product.get('kich_thuoc', ''), product.get('so_trang', ''), product.get('hinh_thuc', '')))
         conn.commit()
